@@ -108,7 +108,7 @@ api_key    →  <your_api_key_is_here>
 ### 1. Клонировать репозиторий
 
 ```bash
-git clone https://github.com/<your-username>/centr-krasok-ai-bot
+git clone https://github.com/khamid95/centr-krasok-ai-bot
 ```
 
 ### 2. Импортировать воркфлоу в n8n
