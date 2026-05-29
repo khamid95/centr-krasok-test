@@ -4,6 +4,9 @@
 
 ---
 
+<img width="1331" height="654" alt="Снимок экрана 2026-05-29 в 14 05 34" src="https://github.com/user-attachments/assets/133006ee-ed41-46fd-bb9f-6ccd8c041853" />
+
+
 ## 🚀 Что реализовано
 
 | Требование из задания | Статус |
