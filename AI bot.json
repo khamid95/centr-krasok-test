@@ -1,5 +1,5 @@
 {
-  "name": "AI bot copy",
+  "name": "AI bot",
   "nodes": [
     {
       "parameters": {
@@ -43,10 +43,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1392,
-        -352
+        1360,
+        -432
       ],
-      "id": "74560697-f9be-4196-b948-c3b1d4f336de",
+      "id": "916a02cb-2808-489b-b596-6c19c75c75d5",
       "name": "Set token"
     },
     {
@@ -56,16 +56,16 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1200,
+        1184,
         -432
       ],
-      "id": "3717a788-8eaa-48bc-b030-6c7b70f565dc",
+      "id": "5f573932-d570-4f1a-9390-2bcce10f9355",
       "name": "uuid"
     },
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "56b82b76-34f3-4f64-a8ff-7c7156c9445b",
+        "path": "28381561-f533-4403-84c9-2edc0b1aea2e",
         "options": {}
       },
       "type": "n8n-nodes-base.webhook",
@@ -74,9 +74,9 @@
         560,
         -528
       ],
-      "id": "ba44e9e0-e8f3-46dc-b48f-9a87f9388e53",
+      "id": "05e94799-cb4d-4d4f-be6b-ea6d32024726",
       "name": "Webhook",
-      "webhookId": "56b82b76-34f3-4f64-a8ff-7c7156c9445b",
+      "webhookId": "28381561-f533-4403-84c9-2edc0b1aea2e",
       "alwaysOutputData": true
     },
     {
@@ -102,7 +102,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"model\": \"GigaChat-2-Pro\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": {{ JSON.stringify($json.content) }}\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"{{ $('Webhook').item.json.body.message.text }}\"\n    }\n  ]\n}",
+        "jsonBody": "={\n  \"model\": \"GigaChat-2-Pro\",\n  \"messages\": {{ JSON.stringify($json.messages) }}\n}",
         "options": {
           "allowUnauthorizedCerts": true
         }
@@ -110,24 +110,24 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1792,
-        -224
+        1904,
+        -432
       ],
-      "id": "7010e8a9-f5a3-4124-a6e3-7384b983c560",
+      "id": "3c3906e3-1f40-486a-bfb9-0c2085441039",
       "name": "Create request"
     },
     {
       "parameters": {
         "operation": "get",
-        "documentURL": "<link_prompt_in_google_docs>"
+        "documentURL": "https://docs.google.com/document/d/1MAqd8J14xAaLnu4QHhY0Lpw9JufA81P60DErGA0Wmvg/edit?tab=t.0"
       },
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
       "position": [
-        1600,
-        -288
+        1536,
+        -432
       ],
-      "id": "0c451445-c756-4c4e-b7e7-1acb5beba692",
+      "id": "08e58d05-cf9c-4320-a056-7ab5f1cc21c4",
       "name": "Get a prompt",
       "credentials": {
         "googleDocsOAuth2Api": {
@@ -166,7 +166,7 @@
         944,
         -528
       ],
-      "id": "71a98c6d-f3ef-4b67-b01c-e015885ced00",
+      "id": "6d3ac3f9-627f-4fe8-9d40-1de9025d3a94",
       "name": "If"
     },
     {
@@ -176,13 +176,13 @@
             {
               "id": "443447ad-877e-4721-b1e3-35f6903d8208",
               "name": "bot_token",
-              "value": "<your_token_is_here>",
+              "value": "<your_bot_token>",
               "type": "string"
             },
             {
               "id": "cf2f18d8-647b-4587-9ca0-edee55203e89",
               "name": "api",
-              "value": "<your_api_key_is_here>",
+              "value": "<your_api_key>",
               "type": "string"
             }
           ]
@@ -195,7 +195,7 @@
         752,
         -528
       ],
-      "id": "dae32993-3058-4561-91ce-6a022c0527e9",
+      "id": "9c784aa1-6243-4664-8868-df1c3bd2793f",
       "name": "Set"
     },
     {
@@ -224,10 +224,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1200,
+        1184,
         -608
       ],
-      "id": "ab333435-c039-4edb-ad77-ab3a1fdd35be",
+      "id": "f63d3709-800f-4a90-a682-3f27a07ee4d5",
       "name": "Send greetings"
     },
     {
@@ -243,7 +243,7 @@
             },
             {
               "name": "text",
-              "value": "={{ $json.choices[0].message.content }}"
+              "value": "={{ $('Create request').item.json.choices[0].message.content }}"
             }
           ]
         },
@@ -252,10 +252,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1984,
-        -176
+        2080,
+        -432
       ],
-      "id": "99fdf906-9544-4239-b21f-a6fb6928684d",
+      "id": "c00bab51-379b-4e16-a066-8cef4081ae2c",
       "name": "Send response"
     },
     {
@@ -270,8 +270,34 @@
         560,
         -336
       ],
-      "id": "4b7cd283-9454-49c7-a66a-f4eff718d729",
+      "id": "0a796298-7d9d-4fc7-a03b-1a68126f6fa5",
       "name": "Register webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nconst tgId = String($('Webhook').item.json.body.message.chat.id);\nconst userText = $('Webhook').item.json.body.message.text;\nconst systemPrompt = $('Get a prompt').item.json.content;\n\n// Инициализируем историю для нового юзера\nif (!staticData[tgId]) {\n  staticData[tgId] = [];\n}\n\n// Добавляем новое сообщение юзера\nstaticData[tgId].push({\n  role: 'user',\n  content: userText\n});\n\n// Обрезаем до последних 20 сообщений (как reset_context в growbot)\nif (staticData[tgId].length > 10) {\n  staticData[tgId] = staticData[tgId].slice(-10);\n}\n\n// Собираем финальный массив: system + история\nconst messages = [\n  { role: 'system', content: systemPrompt },\n  ...staticData[tgId]\n];\n\nreturn [{ json: { messages } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1712,
+        -432
+      ],
+      "id": "13f47106-5c69-46ce-a189-79be66832cd7",
+      "name": "Get context"
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nconst tgId = String($('Webhook').item.json.body.message.chat.id);\nconst assistantReply = $('Create request').item.json.choices[0].message.content;\n\n// Инициализируем если вдруг пусто\nif (!staticData[tgId]) {\n  staticData[tgId] = [];\n}\n\nstaticData[tgId].push({\n  role: 'assistant',\n  content: assistantReply\n});\n\nreturn [{ json: { reply: assistantReply } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2272,
+        -432
+      ],
+      "id": "9cfaccfb-ad03-4694-bb21-3c87d98d30bb",
+      "name": "Save response"
     }
   ],
   "pinData": {},
@@ -324,7 +350,7 @@
       "main": [
         [
           {
-            "node": "Create request",
+            "node": "Get context",
             "type": "main",
             "index": 0
           }
@@ -359,18 +385,45 @@
           }
         ]
       ]
+    },
+    "Get context": {
+      "main": [
+        [
+          {
+            "node": "Create request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save response": {
+      "main": [
+        []
+      ]
+    },
+    "Send response": {
+      "main": [
+        [
+          {
+            "node": "Save response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "a1a8e9e9-39e5-4616-9f36-db13c4f0a09b",
+  "versionId": "6a481354-26e9-42c4-95ab-814cc8e48951",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "924c532a26061cb926cceb9e81a4a5aa0fe38a04ded11ad198baab8d2a0b4759"
   },
-  "id": "MThU2HW7TJsMPxLR",
+  "id": "7D4otBYx3gDWOJvu",
   "tags": [
     {
       "updatedAt": "2026-05-28T18:16:46.727Z",
