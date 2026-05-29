@@ -35,9 +35,7 @@
                     │                   │
              приветствие          [GigaChat OAuth]
                     │                   │
-             [Telegram API]       [Get models]
-                                        │
-                                  [Google Docs]
+             [Telegram API]       [Google Docs]
                                   загрузка промта
                                         │
                                   [GigaChat API]
@@ -57,7 +55,6 @@
 | **Send greetings** | Отправляет приветствие на двух языках (RU + KZ) |
 | **uuid** | Генерирует уникальный RqUID для OAuth-запроса GigaChat |
 | **Set token** | Получает Bearer-токен через GigaChat OAuth 2.0 |
-| **Get models** | Запрашивает список доступных моделей |
 | **Get a prompt** | Подтягивает актуальный системный промт из Google Docs |
 | **Create request** | Формирует запрос к GigaChat Chat Completions API |
 | **Send response** | Отправляет ответ модели пользователю в Telegram |
