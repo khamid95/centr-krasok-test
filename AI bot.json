@@ -1,0 +1,382 @@
+{
+  "name": "AI bot copy",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ngw.devices.sberbank.ru:9443/api/v2/oauth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "RqUID",
+              "value": "={{ $json.uuid }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Basic {{ $('Set').item.json.api }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "scope",
+              "value": "GIGACHAT_API_PERS"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1392,
+        -352
+      ],
+      "id": "74560697-f9be-4196-b948-c3b1d4f336de",
+      "name": "Set token"
+    },
+    {
+      "parameters": {
+        "jsCode": "function generateUUID() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {\n    const r = (Math.random() * 16) | 0;\n    const v = c === 'x' ? r : (r & 0x3) | 0x8;\n    return v.toString(16);\n  });\n}\n\nconst uuid = generateUUID();\n\nreturn [\n  {\n    json: {\n      uuid,\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        -432
+      ],
+      "id": "3717a788-8eaa-48bc-b030-6c7b70f565dc",
+      "name": "uuid"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "56b82b76-34f3-4f64-a8ff-7c7156c9445b",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        560,
+        -528
+      ],
+      "id": "ba44e9e0-e8f3-46dc-b48f-9a87f9388e53",
+      "name": "Webhook",
+      "webhookId": "56b82b76-34f3-4f64-a8ff-7c7156c9445b",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://gigachat.devices.sberbank.ru/api/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"GigaChat-2-Pro\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": {{ JSON.stringify($json.content) }}\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"{{ $('Webhook').item.json.body.message.text }}\"\n    }\n  ]\n}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1792,
+        -224
+      ],
+      "id": "7010e8a9-f5a3-4124-a6e3-7384b983c560",
+      "name": "Create request"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "<link_prompt_in_google_docs>"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        -288
+      ],
+      "id": "0c451445-c756-4c4e-b7e7-1acb5beba692",
+      "name": "Get a prompt",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "dXrRWg33xSiNfzFv",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "bbbc6741-c943-417b-b27d-c9eb2dff1be8",
+              "leftValue": "={{ $('Webhook').item.json.body.message.text }}",
+              "rightValue": "/start",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        944,
+        -528
+      ],
+      "id": "71a98c6d-f3ef-4b67-b01c-e015885ced00",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "443447ad-877e-4721-b1e3-35f6903d8208",
+              "name": "bot_token",
+              "value": "<your_token_is_here>",
+              "type": "string"
+            },
+            {
+              "id": "cf2f18d8-647b-4587-9ca0-edee55203e89",
+              "name": "api",
+              "value": "<your_api_key_is_here>",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        752,
+        -528
+      ],
+      "id": "dae32993-3058-4561-91ce-6a022c0527e9",
+      "name": "Set"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $('Set').item.json.bot_token }}/sendMessage",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chat_id",
+              "value": "={{ $('Webhook').item.json.body.message.chat.id }}"
+            },
+            {
+              "name": "text",
+              "value": "=<b>Сізді Центр Красок #1 дүкенінің AI кеңесшісі қарсы алады!</b>\nМен қазақша, орысша және басқа да көптеген тілдерде сөйлей аламын!\nКез келген сұрақ қойыңыз, мен оған қуана жауап беремін :)\n\n<b>Вас приветствует AI консультант магазина Центр Красок #1!</b>\nЯ умею говорить на казахском, русском и многих других языках!\nЗадайте любой вопрос и я с радостью отвечу на него :)\n"
+            },
+            {
+              "name": "parse_mode",
+              "value": "HTML"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1200,
+        -608
+      ],
+      "id": "ab333435-c039-4edb-ad77-ab3a1fdd35be",
+      "name": "Send greetings"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $('Set').item.json.bot_token }}/sendMessage",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chat_id",
+              "value": "={{ $('Webhook').item.json.body.message.chat.id }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.choices[0].message.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1984,
+        -176
+      ],
+      "id": "99fdf906-9544-4239-b21f-a6fb6928684d",
+      "name": "Send response"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot<your_token_is_here>/setWebhook?url=https://n8n.growbeat.pro/webhook/ai-test-flow",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        -336
+      ],
+      "id": "4b7cd283-9454-49c7-a66a-f4eff718d729",
+      "name": "Register webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Set token": {
+      "main": [
+        [
+          {
+            "node": "Get a prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "uuid": {
+      "main": [
+        [
+          {
+            "node": "Set token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create request": {
+      "main": [
+        [
+          {
+            "node": "Send response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a prompt": {
+      "main": [
+        [
+          {
+            "node": "Create request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send greetings",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "uuid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a1a8e9e9-39e5-4616-9f36-db13c4f0a09b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "924c532a26061cb926cceb9e81a4a5aa0fe38a04ded11ad198baab8d2a0b4759"
+  },
+  "id": "MThU2HW7TJsMPxLR",
+  "tags": [
+    {
+      "updatedAt": "2026-05-28T18:16:46.727Z",
+      "createdAt": "2026-05-28T18:16:46.727Z",
+      "id": "WCkbB3v7RD4qdip6",
+      "name": "Test flow"
+    }
+  ]
+}
